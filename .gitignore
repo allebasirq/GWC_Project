@@ -218,3 +218,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project data (CICIDS2017 files are very large)
+data/raw/
+data/processed/
+
+# OS files
+.DS_Store
+Thumbs.db
