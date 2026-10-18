@@ -88,7 +88,7 @@ Place the CSV files in `data/raw/`. The `data/raw/` and `data/processed/` folder
 
 - Never push directly to `main`. Create a branch (for example `nicole/results-page`) and open a pull request.
 - Another team member reviews each pull request before merging.
-- Check-ins: Tuesday and Friday, 15 minutes.
+- Check-ins: Mondays, 10AM-11AM.
 - Keep `requirements.txt` up to date when you add a library.
 - Keep each file in `data/samples/` small (a few MB at most).
 
