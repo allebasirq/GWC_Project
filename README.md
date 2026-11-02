@@ -1,35 +1,51 @@
 # Cybersecurity Threat Detection System
 
-Machine-learning system that detects benign vs. attack network traffic (DDoS, FTP-Patator, SSH-Patator) using the CICIDS2017 dataset, with a Streamlit dashboard for inspecting flagged flows.
+A club project that trains a machine-learning model to spot attacks in **recorded** network traffic, with a small website for exploring the results.
 
 **Presentation:** Friday, November 13, 2026
 
-## Project overview
+## What this project is
 
-We train and compare machine-learning classifiers on network-flow data, then wrap the best model in a dashboard. A user can upload a flow CSV or replay sample traffic and see flagged flows, an attack-type breakdown, and model metrics.
+Network traffic is recorded as "flows" (one row per connection between two computers). We train a model on the public CICIDS2017 dataset to tell **normal** traffic from **attacks** (DDoS and brute-force password guessing). A website lets someone upload a file of flows, or play a sample, and see which connections were flagged.
 
-**Scope**
-- Binary detection first (benign vs. attack), then multi-class (DDoS, FTP-Patator, SSH-Patator)
-- Flow-feature CSVs only, not raw PCAPs
-- Detection only, for defensive use
+**What it is not:** a live monitor of an internet connection. It analyzes recorded data and is designed for analysts and learners. It is for **defense only** and contains no attack tools.
+
+## MVP and Stretch goals
+
+**MVP (must work)**
+- Binary detection: normal vs. attack
+- Two CICIDS2017 daily files (one with brute-force attacks, one with DDoS), using a 5 to 10% sample
+- Cleaning: fix broken values, remove repeated rows and useless columns
+- Fair split: practice, check and exam parts with the same attack ratio in each
+- Models: logistic regression, decision tree, random forest
+- Honest scoring: attacks caught, false alarms, missed attacks
+- Website with two pages: **Upload and Results** and **Replay**
+- Write-up and slides covering findings, limits and ethics
+
+**Stretch (only if ahead of schedule)**
+- Multi-class: say which attack it is (DDoS, FTP-Patator, SSH-Patator) and show an attack-type chart
+- A fourth model (XGBoost or LightGBM)
+- Explainability page (which features matter most)
+- Test on a different day's traffic
+- Replay that reveals rows one at a time
+
+**If we fall behind, cut in this order:** row-by-row replay, different-day test, Explainability page, fourth model, attack-type chart.
 
 ## Team
 
 | Name | Role | Owns |
 |---|---|---|
-| Isabella | Mentor, ML lead | Repo setup, scope, ensemble models, imbalance handling, evaluation, stretch test, saved model |
-| Varushi | Backend (data) and frontend | Data pipeline, cleaning, splits, baselines; Replay and Explainability pages |
-| Nicole | Backend (inference) and frontend | `inference.py`, upload validation, app shell; Upload and Results and Model Performance pages |
+| Isabella | Project manager and model lead | Repo setup, starter code, training and scoring the models, saved model |
+| Varushi | Data and Replay page | Data download, cleaning, fair split, sample files, Replay page |
+| Nicole | Website and upload code | `inference.py`, upload checks, Upload and Results page |
 
-## Dashboard pages
+## Website pages
 
-| Page | Owner | Backed by |
+| Page | Owner | What it does |
 |---|---|---|
-| App shell and navigation | Nicole | Streamlit |
-| Upload and Results | Nicole | `src/inference.py` |
-| Model Performance | Nicole | Saved metrics and plots in `models/` |
-| Replay | Varushi | Sample files in `data/samples/` |
-| Explainability | Varushi | SHAP or feature importance on the final model |
+| Upload and Results | Nicole | Upload a flow CSV, see flagged rows, a normal vs. attack count, and model scores and charts |
+| Replay | Varushi | Pick a sample (normal, DDoS, brute force) and see what gets flagged |
+| Explainability (Stretch) | Varushi | Shows which features matter most to the model |
 
 ## Repository structure
 
@@ -37,16 +53,17 @@ We train and compare machine-learning classifiers on network-flow data, then wra
 data/
   raw/         Original CICIDS2017 CSVs (not tracked by Git)
   processed/   Cleaned data and splits (not tracked by Git)
-  samples/     Small replay sample files (tracked by Git)
-notebooks/     Jupyter notebooks for exploration
-src/           Final pipeline modules (.py): data_pipeline.py, inference.py, etc.
-models/        Saved model (model.joblib), metrics (JSON) and plots (PNG)
-app/           Streamlit dashboard (app.py and pages)
+  samples/     Small sample files for Replay (tracked by Git)
+docs/          Team agreements (interface_contract.md)
+notebooks/     Jupyter notebooks for exploration and training
+src/           Shared code: data_pipeline.py, inference.py
+models/        Saved model, scores (JSON) and charts (PNG)
+app/           Streamlit website (app.py and pages/)
 ```
 
 ## Getting started
 
-**Requirements:** Python 3.10 or newer, Git, VS Code (recommended).
+**You need:** Python 3.10 or newer, Git, and VS Code (recommended).
 
 1. Clone the repo:
 ```
@@ -57,72 +74,76 @@ app/           Streamlit dashboard (app.py and pages)
 
    Mac or Linux:
 ```
-   python3 -m venv venv
-   source venv/bin/activate
+   python3 -m venv .venv
+   source .venv/bin/activate
 ```
    Windows (PowerShell):
 ```
-   python -m venv venv
-   venv\Scripts\activate
+   python -m venv .venv
+   .venv\Scripts\activate
 ```
-3. Install dependencies:
+3. Install the libraries:
 ```
    pip install -r requirements.txt
 ```
-4. Download the data (see below).
-5. Run the dashboard:
+4. Add the data (see below).
+5. Run the website:
 ```
    streamlit run app/app.py
 ```
    It opens at http://localhost:8501.
 
-**Mac note:** if XGBoost fails with a `libomp` error, run `brew install libomp`.
-
 ## Data
 
-We use the **CICIDS2017 "MachineLearningCVE"** CSV files (flow features, not raw PCAPs), published by the Canadian Institute for Cybersecurity. Search for "CICIDS2017 MachineLearningCVE" to find the official download page.
+We use the **CICIDS2017 "MachineLearningCVE"** CSV files (flow features, not raw packet captures), published by the Canadian Institute for Cybersecurity. Search for "CICIDS2017 MachineLearningCVE" to find the official download page.
 
-Place the CSV files in `data/raw/`. The `data/raw/` and `data/processed/` folders are ignored by Git because the files are very large. Small replay samples live in `data/samples/` and are committed. Do not commit full datasets.
+Download only the two daily files with the attacks we need and place them in `data/raw/`. The `data/raw/` and `data/processed/` folders are ignored by Git because the files are very large. Small sample files live in `data/samples/` and are committed. Do not commit full datasets.
 
 ## Team workflow
 
-- Never push directly to `main`. Create a branch (for example `nicole/results-page`) and open a pull request.
-- Another team member reviews each pull request before merging.
-- Check-ins: Mondays, 10AM-11AM.
+- Nobody pushes directly to `main`.
+- Create your own branch (for example `nicole/upload-page`), do your work there, and open a pull request.
+- A teammate reviews each pull request before it is merged.
+- Check-ins: Mondays, 15 minutes. Each person shares what they finished, what is next, and what is blocking them.
 - Keep `requirements.txt` up to date when you add a library.
 - Keep each file in `data/samples/` small (a few MB at most).
 
-## Interface contract
+## Team agreements
 
-- **Labels:** `BENIGN`, `DDoS`, `FTP-Patator`, `SSH-Patator`
-- **Model file:** one joblib file in `models/` containing the full pipeline (scaler and model) plus the feature list
-- **Feature columns:** exact list and order defined in `src/` (finalized in Week 1)
-- **Saved outputs for the dashboard:** metrics as JSON and plots as PNG in `models/`
+Details are in `docs/interface_contract.md`. In short:
+- **Labels:** `BENIGN` and `ATTACK` (MVP). Stretch adds `DDoS`, `FTP-Patator`, `SSH-Patator`.
+- **Shared cleaning:** one function, `clean_flows(df)`, in `src/data_pipeline.py`, used by both training and the website.
+- **Model file:** `models/binary_model.joblib` (MVP) and `models/multiclass_model.joblib` (Stretch).
+- **Prediction:** `predict(df)` in `src/inference.py` returns the rows plus `prediction` and `probability` columns.
+- **Saved outputs for the website:** `metrics.json` and chart images in `models/`.
 
 ## Schedule
 
 | Week | Dates | Focus |
 |---|---|---|
-| 1 | Oct 19 to 25 | Repo setup, data loading and cleaning, app shell, dashboard wireframe, interface contract |
-| 2 | Oct 26 to Nov 1 | Splits, baselines, ensemble models, inference module, page layouts |
-| 3 | Nov 2 to 8 | Evaluation, final model (by Nov 4), all five dashboard pages with the real model, stretch test |
-| 4 | Nov 9 to 13 | Feature freeze (Nov 10), write-up, slides, backup demo, rehearsal, presentation |
+| 1 | Oct 19 to 25 | Repo setup, starter code, data download and cleaning, website frame |
+| 2 | Oct 26 to Nov 1 | Fair split, three models, upload code, Replay layout |
+| 3 | Nov 2 to 8 | Final model (Nov 4), real model in the website, testing |
+| 4 | Nov 9 to 13 | Freeze (Nov 10), write-up, slides, backup video, rehearsal, presentation |
 
-**Key deadlines:** repo ready Oct 20, cleaned data Oct 25, final model Nov 4, feature freeze Nov 10, presentation Nov 13.
+**Key dates:** repo ready Oct 20, clean data Oct 25, final model Nov 4, freeze Nov 10, presentation Nov 13.
 
-## Ethics and limitations
+## Limits and ethics
 
-- This system is for **detection only** and defensive use. It contains no attack tooling.
-- CICIDS2017 is lab-generated and may not reflect real-world networks.
-- Results may drop on traffic from other days or environments.
-- Missed attacks (false negatives) are the most serious error, so we report attack recall prominently.
-- Uploaded traffic data should be treated as sensitive.
+- Our data comes from a lab, so real networks may behave differently.
+- Similar rows may still overlap between the practice and exam parts, so scores can look better than they would in practice.
+- Missing a real attack (a false negative) is the most serious mistake, so we report it clearly.
+- The model says a connection *looks like* an attack. A person must still investigate it.
+- Only record networks you own or have permission to monitor.
+- This project is for defense only.
 
 ## Status
 
 - [x] Repo and environment set up
+- [ ] Starter code shared
 - [ ] Data cleaned and split
-- [ ] Baseline models trained
+- [ ] Three models trained and scored
 - [ ] Final model saved
-- [ ] Dashboard pages working
+- [ ] Upload and Results page working
+- [ ] Replay page working
 - [ ] Write-up and slides complete
