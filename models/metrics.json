@@ -1,0 +1,12 @@
+{
+  "model": "logistic_regression",
+  "evaluation_split": "validation",
+  "positive_label": "ATTACK",
+  "validation_rows": 4821,
+  "attack_recall": 0.9961127308066083,
+  "false_alarms": 42,
+  "false_alarm_rate": 0.011075949367088608,
+  "true_negatives": 3750,
+  "false_negatives": 4,
+  "true_positives": 1025
+}
