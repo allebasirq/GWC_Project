@@ -226,3 +226,5 @@ data/processed/
 # OS files
 .DS_Store
 Thumbs.db
+data/raw/
+data/clean/*.csv
