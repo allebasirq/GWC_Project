@@ -99,6 +99,16 @@ We use the **CICIDS2017 "MachineLearningCVE"** CSV files (flow features, not raw
 
 Download only the two daily files with the attacks we need and place them in `data/raw/`. The `data/raw/` and `data/processed/` folders are ignored by Git because the files are very large. Small sample files live in `data/samples/` and are committed. Do not commit full datasets.
 
+## Train the logistic-regression baseline
+
+After the data pipeline creates `data/processed/train.csv` and `val.csv`, run:
+
+```
+python src/train_logistic_regression.py
+```
+
+The script trains a class-weighted binary logistic-regression model, evaluates it on the validation split, and reports attack recall and the false-alarm count and rate. It saves the model to `models/binary_model.joblib` and validation metrics to `models/metrics.json`. Use validation results to compare models; keep the test split untouched until final evaluation.
+
 ## Team workflow
 
 - Nobody pushes directly to `main`.
@@ -140,8 +150,8 @@ Details are in `docs/interface_contract.md`. In short:
 ## Status
 
 - [x] Repo and environment set up
-- [ ] Starter code shared
-- [ ] Data cleaned and split
+- [x] Starter code shared
+- [x] Data cleaned and split
 - [ ] Three models trained and scored
 - [ ] Final model saved
 - [ ] Upload and Results page working
