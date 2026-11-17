@@ -1,11 +1,11 @@
 """
 Make the small sample files for the Replay page (owner: Varushi)
 
-Takes rows from the TEST split (rows the model never studies) and saves 
-three small files in data/samples/. The keep the Label column, so the
+Takes rows from the TEST split (rows the model never studied) and saves 
+three small files in data/samples/. They keep the Label column, so the
 website can compare what really happened with what the model said.
 
-Run from the repo root, after daya_pipeline.py:
+Run from the repo root, after data_pipeline.py:
     python src/make_samples.py
 """
 from pathlib import Path

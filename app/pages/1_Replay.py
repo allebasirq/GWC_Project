@@ -72,7 +72,7 @@ st.caption("Missed attacks are the most serious mistake: real attacks "
 
 # Every connection
 st.subheader("Every connection")
-only_flagged = st.checkbox("Show only flagged connection")
+only_flagged = st.checkbox("Show only flagged connections")
 
 table = pd.DataFrame({
     "Row": results.index + 1,
