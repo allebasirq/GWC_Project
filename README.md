@@ -2,7 +2,8 @@
 
 A club project that trains a machine-learning model to spot attacks in **recorded** network traffic, with a small website for exploring the results.
 
-**Presentation:** Friday, November 13, 2026
+**Presentation:** Thursday, November 19, 2026
+**Devpost deadline:** Wednesday, November 18, 2026
 
 ## What this project is
 
@@ -99,15 +100,29 @@ We use the **CICIDS2017 "MachineLearningCVE"** CSV files (flow features, not raw
 
 Download only the two daily files with the attacks we need and place them in `data/raw/`. The `data/raw/` and `data/processed/` folders are ignored by Git because the files are very large. Small sample files live in `data/samples/` and are committed. Do not commit full datasets.
 
-## Train the logistic-regression baseline
+## Train and compare the MVP models
 
 After the data pipeline creates `data/processed/train.csv` and `val.csv`, run:
 
 ```
-python src/train_logistic_regression.py
+python src/train_models.py
 ```
 
-The script trains a class-weighted binary logistic-regression model, evaluates it on the validation split, and reports attack recall and the false-alarm count and rate. It saves the model to `models/binary_model.joblib` and validation metrics to `models/metrics.json`. Use validation results to compare models; keep the test split untouched until final evaluation.
+The script trains and compares class-weighted logistic regression, decision tree,
+and random forest models on the validation split. It reports attack recall and
+the false-alarm count and rate. It saves all three models plus the final model
+as `models/binary_model.joblib`, and saves the comparison to
+`models/metrics.json`. The test split remains untouched until final evaluation.
+
+The final model is selected first by the highest attack recall, then by the
+lowest false-alarm rate.
+
+Running `python src/train_models.py` also creates:
+
+- `models/confusion_matrix.png`
+- `models/roc_curve.png`
+- `models/pr_curve.png`
+- `models/feature_importance.png`
 
 ## Team workflow
 
@@ -134,9 +149,9 @@ Details are in `docs/interface_contract.md`. In short:
 | 1 | Oct 19 to 25 | Repo setup, starter code, data download and cleaning, website frame |
 | 2 | Oct 26 to Nov 1 | Fair split, three models, upload code, Replay layout |
 | 3 | Nov 2 to 8 | Final model (Nov 4), real model in the website, testing |
-| 4 | Nov 9 to 13 | Freeze (Nov 10), write-up, slides, backup video, rehearsal, presentation |
+| 4 | Nov 9 to 19 | Freeze (Nov 10), write-up, slides, backup video, rehearsal, Devpost submission, presentation |
 
-**Key dates:** repo ready Oct 20, clean data Oct 25, final model Nov 4, freeze Nov 10, presentation Nov 13.
+**Key dates:** repo ready Oct 20, clean data Oct 25, final model Nov 4, freeze Nov 10, Devpost due Nov 18, presentation Nov 19.
 
 ## Limits and ethics
 
@@ -152,8 +167,8 @@ Details are in `docs/interface_contract.md`. In short:
 - [x] Repo and environment set up
 - [x] Starter code shared
 - [x] Data cleaned and split
-- [ ] Three models trained and scored
-- [ ] Final model saved
-- [ ] Upload and Results page working
-- [ ] Replay page working
+- [x] Three models trained and scored
+- [x] Final model saved
+- [x] Upload and Results page working
+- [x] Replay page working
 - [ ] Write-up and slides complete

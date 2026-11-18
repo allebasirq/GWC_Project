@@ -1,12 +1,48 @@
 {
-  "model": "logistic_regression",
+  "model": "decision_tree",
   "evaluation_split": "validation",
-  "positive_label": "ATTACK",
   "validation_rows": 4821,
-  "attack_recall": 0.9961127308066083,
-  "false_alarms": 42,
-  "false_alarm_rate": 0.011075949367088608,
-  "true_negatives": 3750,
-  "false_negatives": 4,
-  "true_positives": 1025
+  "attack_recall": 0.9970845481049563,
+  "false_alarms": 1,
+  "false_alarm_rate": 0.00026371308016877635,
+  "true_negatives": 3791,
+  "false_negatives": 3,
+  "true_positives": 1026,
+  "positive_label": "ATTACK",
+  "models": [
+    {
+      "model": "logistic_regression",
+      "evaluation_split": "validation",
+      "validation_rows": 4821,
+      "attack_recall": 0.9961127308066083,
+      "false_alarms": 42,
+      "false_alarm_rate": 0.011075949367088608,
+      "true_negatives": 3750,
+      "false_negatives": 4,
+      "true_positives": 1025
+    },
+    {
+      "model": "decision_tree",
+      "evaluation_split": "validation",
+      "validation_rows": 4821,
+      "attack_recall": 0.9970845481049563,
+      "false_alarms": 1,
+      "false_alarm_rate": 0.00026371308016877635,
+      "true_negatives": 3791,
+      "false_negatives": 3,
+      "true_positives": 1026
+    },
+    {
+      "model": "random_forest",
+      "evaluation_split": "validation",
+      "validation_rows": 4821,
+      "attack_recall": 0.9951409135082604,
+      "false_alarms": 0,
+      "false_alarm_rate": 0.0,
+      "true_negatives": 3792,
+      "false_negatives": 5,
+      "true_positives": 1024
+    }
+  ],
+  "final_model": "decision_tree"
 }

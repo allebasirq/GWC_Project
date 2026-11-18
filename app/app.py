@@ -154,13 +154,39 @@ def show_model_quality():
         return
 
     m = json.loads(METRICS_PATH.read_text())
+    comparisons = m.get("models")
+    if comparisons:
+        st.subheader("Model comparison")
+        comparison = pd.DataFrame(comparisons)
+        st.dataframe(
+            comparison.rename(columns={
+                "model": "Model",
+                "attack_recall": "Attack recall",
+                "false_alarms": "False alarms",
+                "false_alarm_rate": "False-alarm rate",
+                "false_negatives": "Missed attacks",
+            })[["Model", "Attack recall", "False alarms",
+               "False-alarm rate", "Missed attacks"]],
+            hide_index=True,
+            column_config={
+                "Attack recall": st.column_config.NumberColumn(format="%.1%"),
+                "False-alarm rate": st.column_config.NumberColumn(format="%.1%"),
+            },
+        )
+        st.caption(
+            f"Final model selected: **{str(m.get('final_model', m.get('model'))).replace('_', ' ')}**"
+        )
+
     tp, fn = m.get("true_positives"), m.get("false_negatives")
     tn, fp = m.get("true_negatives"), m.get("false_positives", m.get("false_alarms"))
 
     model_name = str(m.get("model", "model")).replace("_", " ")
     split = m.get("evaluation_split", "test")
-    st.write(f"Scores for the **{model_name}** model on the {split} rows, "
-             "which it never studied.")
+    st.write(
+        f"Scores for the **{model_name}** model on the {split} rows. "
+        "These rows were not used to train the model, although they were used "
+        "to compare models and select the final model."
+    )
 
     if None not in (tp, fn, tn, fp):
         a, b, c = st.columns(3)
