@@ -52,8 +52,28 @@ def show_upload_and_results():
 
     uploaded = st.file_uploader("Choose a CSV file of network flows", type=["csv"])
     if uploaded is None:
-        st.info("No file yet. To try it out, upload one of the sample files from "
-                "the `data/samples/` folder.")
+        st.info(
+            "Upload a CSV of network flows. If you have a Wireshark capture, "
+            "convert it to a CICIDS2017-compatible flow CSV first."
+        )
+        with st.expander("How do I get a flow CSV from my network?"):
+            st.markdown(
+                "1. Capture traffic on a network you own or have permission to monitor "
+                "using Wireshark, then save the capture as `.pcap` or `.pcapng`.\n"
+                "2. Convert the capture to flow records with CICFlowMeter or a "
+                "compatible flow exporter.\n"
+                "3. Upload the generated CSV here. It must include the CICIDS2017 "
+                "flow feature columns used by this model."
+            )
+            st.warning(
+                "Wireshark packet captures and packet-list CSV exports are not "
+                "accepted directly. This app analyzes recorded flows, not live traffic."
+            )
+            st.caption(
+                "The app handles missing or non-numeric feature values automatically. "
+                "Because the model was trained on CICIDS2017 lab traffic, results on "
+                "your network may be less reliable."
+            )
         return
 
     try:

@@ -100,6 +100,21 @@ We use the **CICIDS2017 "MachineLearningCVE"** CSV files (flow features, not raw
 
 Download only the two daily files with the attacks we need and place them in `data/raw/`. The `data/raw/` and `data/processed/` folders are ignored by Git because the files are very large. Small sample files live in `data/samples/` and are committed. Do not commit full datasets.
 
+### Preparing a CSV from your own network
+
+The app accepts flow-feature CSV files, not raw Wireshark `.pcap`/`.pcapng`
+captures or Wireshark packet-list exports. To test your own authorized traffic:
+
+1. Capture traffic you own or have permission to monitor in Wireshark and save it
+   as `.pcap` or `.pcapng`.
+2. Convert the capture into flow records with CICFlowMeter or a compatible
+   exporter that produces CICIDS2017-style feature columns.
+3. Upload the generated CSV in the app. It automatically handles missing or
+   non-numeric feature values.
+
+The model was trained on CICIDS2017 lab traffic, so results on other networks
+may be less reliable.
+
 ## Train and compare the MVP models
 
 After the data pipeline creates `data/processed/train.csv` and `val.csv`, run:
