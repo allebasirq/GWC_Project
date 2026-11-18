@@ -158,19 +158,25 @@ def show_model_quality():
     if comparisons:
         st.subheader("Model comparison")
         comparison = pd.DataFrame(comparisons)
+        comparison["attack_recall"] *= 100
+        comparison["false_alarm_rate"] *= 100
+        comparison = comparison.rename(columns={
+            "model": "Model",
+            "attack_recall": "Attack recall",
+            "false_alarms": "False alarms",
+            "false_alarm_rate": "False-alarm rate",
+            "false_negatives": "Missed attacks",
+        })
+        comparison = comparison[[
+            "Model", "Attack recall", "False alarms",
+            "False-alarm rate", "Missed attacks",
+        ]]
         st.dataframe(
-            comparison.rename(columns={
-                "model": "Model",
-                "attack_recall": "Attack recall",
-                "false_alarms": "False alarms",
-                "false_alarm_rate": "False-alarm rate",
-                "false_negatives": "Missed attacks",
-            })[["Model", "Attack recall", "False alarms",
-               "False-alarm rate", "Missed attacks"]],
+            comparison,
             hide_index=True,
             column_config={
-                "Attack recall": st.column_config.NumberColumn(format="%.1%"),
-                "False-alarm rate": st.column_config.NumberColumn(format="%.1%"),
+                "Attack recall": st.column_config.NumberColumn(format="%.1f%%"),
+                "False-alarm rate": st.column_config.NumberColumn(format="%.1f%%"),
             },
         )
         st.caption(
