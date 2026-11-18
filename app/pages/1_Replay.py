@@ -20,10 +20,15 @@ SAMPLES = {
     "Brute-force password guessing (FTP and SSH)": "brute_force.csv",
 }
 
-st.set_page_config(page_title="Replay", page_icon="▶️", layout="wide")
-st.title("▶️ Replay")
-st.write("Pick a sample of **recorded** traffic and see which connections "
-         "the model flags as an attack.")
+st.set_page_config(page_title="Replay", page_icon="✨", layout="wide")
+st.sidebar.markdown("### 🌸 GWC Cyber Lab")
+st.sidebar.caption("Curious minds. Safer networks.")
+st.caption("GIRLS WHO CODE · LEARN BY EXPLORING")
+st.title("Replay the traffic ✨")
+st.write(
+    "Choose a recorded flow sample and follow along as the model checks each "
+    "connection. This is a safe, hands-on way to explore defensive machine learning."
+)
 
 
 @st.cache_resource

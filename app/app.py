@@ -31,7 +31,39 @@ KEY_COLUMNS = ["Source IP", "Destination IP", "Destination Port", "Timestamp",
                "Flow Duration", "Total Fwd Packets", "Total Backward Packets",
                "Flow Bytes/s", "Label"]
 
-st.set_page_config(page_title="Threat Detection", page_icon="🛡️", layout="wide")
+st.set_page_config(page_title="GWC Cyber Lab", page_icon="👾", layout="wide")
+st.markdown(
+    """
+    <style>
+    [data-testid="stMetric"] {
+        background: linear-gradient(135deg, #FFFFFF 0%, #FBF3F8 100%);
+        border: 1px solid #EAD9E5;
+        border-radius: 16px;
+        padding: 1rem 1.1rem;
+        box-shadow: 0 3px 12px rgba(89, 46, 75, 0.06);
+    }
+    [data-testid="stFileUploader"] section {
+        border: 1px dashed #C989A8;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.7);
+    }
+    .stButton > button, .stDownloadButton > button {
+        border-radius: 999px;
+        font-weight: 600;
+    }
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 0.5rem;
+    }
+    .stTabs [data-baseweb="tab"] {
+        border-radius: 999px;
+        padding: 0.45rem 1rem;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+st.sidebar.markdown("### 🌸 GWC Cyber Lab")
+st.sidebar.caption("Curious minds. Safer networks.")
 
 
 @st.cache_resource
@@ -245,14 +277,42 @@ def show_model_quality():
 # Page layout
 # ---------------------------------------------------------------------------
 
-st.title("🛡️ Cybersecurity Threat Detection System")
-st.write("Upload a CSV file of **recorded** network flows (CICIDS2017 format). "
-         "The model checks each connection and flags the ones that look like "
-         "an attack (DDoS or brute-force password guessing).")
-st.caption("For defense and learning only. A flag means a connection *looks like* "
-           "an attack; a person should always investigate before acting.")
+st.markdown(
+    """
+    <style>
+        
+        h1, h2, h3 {
+            padding-top: 0.2rem !important;
+            padding-bottom: 0.1rem !important;
+            margin-top: 0 !important;
+            margin-bottom: 0.25rem !important;
+        }
 
-tab_results, tab_quality = st.tabs(["Upload and Results", "How good is the model?"])
+        p {
+            
+        }
+        
+        [data-testid="stCaptionContainer"] {
+            margin-bottom: -0.5rem !important;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+st.caption("FALL 2026 - GIRLS WHO CODE PROJECT")
+st.title("GWC Cyber Lab")
+st.subheader("Cybersecurity, made curious 👾")
+st.write(
+    "Explore recorded network traffic, learn what the model notices, and see "
+    "how code can help protect the networks we depend on."
+)
+st.caption(
+    "For learning and defense only. A flag means a connection *looks like* "
+    "an attack; a person should investigate before acting."
+)
+
+tab_results, tab_quality = st.tabs(["📤 Upload & results", "✨ Model insights"])
 with tab_results:
     show_upload_and_results()
 with tab_quality:
